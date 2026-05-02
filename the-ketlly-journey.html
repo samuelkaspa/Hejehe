@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The Ketlly Journey</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; touch-action: none; /* Previne scroll acidental no drag */ }
+        body { 
+            margin: 0; overflow: hidden; font-family: 'Quicksand', sans-serif; 
+            background: #ffe4e1; color: #4a4a4a; user-select: none;
+            display: flex; justify-content: center; align-items: center; height: 100vh;
+            transition: background 0.5s;
+        }
+        .hidden { display: none !important; }
+        .module { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; overflow: hidden; }
+        
+        /* Mod 1: Intro */
+        .fade-text { font-size: 2rem; opacity: 0; transition: opacity 1.5s ease-in-out; }
+        .fall-physics { animation: dropDown 1.5s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards; }
+        @keyframes dropDown { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(20deg); opacity: 0; } }
+        .flash-bw { animation: flashBW 0.2s infinite; }
+        @keyframes flashBW { 0% { background: white; filter: invert(0); } 50% { background: black; filter: invert(1); } 100% { background: white; filter: invert(0); } }
+        .blackout { background: black !important; color: white; transition: background 0s; }
+
+        /* Mod 2: Slider & Rotação */
+        #mod2 { background: #000; color: white; }
+        #m2-wrapper { position: relative; padding: 20px; border-radius: 20px; transform-origin: center center; }
+        .slider-track { width: 40px; height: 300px; background: #333; border-radius: 20px; position: relative; margin: 10px auto; box-shadow: inset 0 0 10px #000; }
+        .slider-handle { width: 60px; height: 60px; background: #ffb6c1; border-radius: 50%; position: absolute; bottom: 0; left: -10px; cursor: pointer; box-shadow: 0 4px 10px rgba(255,182,193,0.5); z-index: 10;}
+        #rotate-hint { margin-top: 20px; font-size: 1.2rem; color: #ffb6c1; pointer-events: none; }
+        .falling-element { transition: transform 0.5s, top 1s ease-in !important; top: 150vh !important; }
+
+        /* Mod 3: Puzzle Detalhado */
+        #mod3 { background: #fdfdfd; }
+        .wall { display: flex; gap: 10px; margin-bottom: 50px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 400px;}
+        .hole { width: 70px; height: 70px; border: 3px dashed #ccc; border-radius: 15px; display: flex; justify-content: center; align-items: center; }
+        .hole svg { opacity: 0.2; filter: grayscale(100%); width: 50px; height: 50px; }
+        .hole.glued { background: #f0f0f0; border-style: solid; border-color: #ddd; box-shadow: inset 0 0 10px rgba(0,0,0,0.05); }
+        .hole.glued svg { opacity: 0.1; }
+        
+        .shapes-container { display: flex; gap: 10px; position: relative; height: 100px; width: 100%; max-width: 400px; justify-content: center; }
+        .shape { width: 70px; height: 70px; cursor: pointer; position: absolute; z-index: 10; display: flex; justify-content: center; align-items: center; filter: drop-shadow(0px 5px 5px rgba(0,0,0,0.2)); transition: transform 0.1s; }
+        .shape svg { width: 60px; height: 60px; pointer-events: none; }
+        .shape:active { transform: scale(1.1); }
+        
+        .item-cola { position: absolute; top: -100px; cursor: pointer; z-index: 20; width: 80px; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3)); }
+        .portal { font-size: 5rem; text-shadow: 0 0 20px #ff69b4; cursor: pointer; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+        /* Mod 4: Minecraft */
+        #mod4 { background: #87CEEB; } 
+        .chat-box { background: rgba(0,0,0,0.7); color: white; padding: 20px; border-radius: 10px; border: 2px solid #555; }
+        .chat-input { padding: 10px; border-radius: 5px; border: none; font-family: 'Quicksand'; margin-top: 10px; width: 80%; }
+        .mc-world { display: grid; grid-template-columns: repeat(10, 30px); gap: 2px; justify-content: center; margin-top: 20px; }
+        .mc-block { width: 30px; height: 30px; background: #8B4513; border: 2px solid #5C3A21; cursor: pointer; }
+        .mc-grass { background: #228B22; height: 6px; width: 100%; }
+        .mc-obsidian { background: #1a0f2e; border-color: #3b2a59; }
+        .cracking { animation: shake 0.5s infinite; filter: brightness(1.5); }
+        @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(3px, 2px) rotate(0deg); } 40% { transform: translate(1px, -1px) rotate(1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 60% { transform: translate(-3px, 1px) rotate(0deg); } 70% { transform: translate(3px, 1px) rotate(-1deg); } 80% { transform: translate(-1px, -1px) rotate(1deg); } 90% { transform: translate(1px, 2px) rotate(0deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }
+        #jumpscare { position: absolute; top:0; left:0; width:100vw; height:100vh; background: black; z-index: 1000; display: flex; justify-content: center; align-items: center; font-size: 10rem; }
+
+        /* Mod 5 & 6: Cupid & Scroll */
+        #mod6-container { background: #fff0f5; width: 100vw; height: 100vh; overflow-y: auto; overflow-x: hidden; position: relative; touch-action: auto; padding-bottom: 200px; }
+        .hud { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background: white; padding: 10px 20px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); font-weight: bold; z-index: 100; color: #ff69b4; }
+        .letter { position: absolute; font-size: 2.5rem; cursor: pointer; animation: float 3s infinite ease-in-out; transition: opacity 0.3s; }
+        @keyframes float { 0% { transform: translateY(0); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0); } }
+        .parrot { position: absolute; font-size: 3rem; cursor: pointer; z-index: 50; }
+        #cupid-scene { text-align: center; padding-top: 100px; margin-bottom: 300px; }
+        .cupid { font-size: 5rem; transition: transform 0.5s; }
+        .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 200; width: 80%; text-align: center; border: 3px solid #ffb6c1; }
+        .modal button { margin-top: 15px; padding: 10px 20px; background: #ffb6c1; border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; font-family: 'Quicksand'; }
+        .btn-start { padding: 15px 30px; font-size: 1.2rem; background: #ffb6c1; border: none; border-radius: 25px; color: white; font-family: 'Quicksand'; font-weight: bold; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 10px rgba(255,182,193,0.5); }
+    </style>
+</head>
+<body>
+
+    <audio id="audio-cute" src="musica_fofa.mp3" loop></audio>
+    <audio id="audio-suspense" src="suspense.mp3"></audio>
+    <audio id="audio-jumpscare" src="susto.mp3"></audio>
+    <audio id="audio-victory" src="vitoria.mp3" loop></audio>
+    <audio id="audio-pop" src="pop.mp3"></audio>
+
+    <div id="start-screen" class="module" style="background: #fff0f5; z-index: 9999;">
+        <h1>The Ketlly Journey 💖</h1>
+        <p>Coloque seus fones de ouvido para a melhor experiência!</p>
+        <button class="btn-start" onclick="startGame()">Começar Jornada</button>
+    </div>
+
+    <div id="mod1" class="module hidden">
+        <div id="m1-text" class="fade-text">oiiii meu bemm</div>
+    </div>
+
+    <div id="mod2" class="module hidden">
+        <div id="m2-wrapper" style="position: absolute;">
+            <p id="m2-text" style="pointer-events: none;">arraste isso para cima</p>
+            <div class="slider-track" id="track">
+                <div class="slider-handle" id="handle"></div>
+            </div>
+            <div id="rotate-hint" class="hidden">
+                <p>nao e so vc girar?</p>
+                <p style="font-size:0.8rem;">(Segure a tela e gire em círculo para virar de ponta cabeça)</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="mod3" class="module hidden">
+        <p id="m3-text" style="font-size: 1.2rem; font-weight: bold;">Encaixe as formas!</p>
+        <div class="wall" id="wall"></div>
+        <div class="shapes-container" id="shapes"></div>
+        
+        <div class="item-cola hidden" id="cola">
+            <div style="font-size: 3rem; background: rgba(255,255,255,0.8); border-radius: 10px; border: 2px solid #ccc; padding: 5px; text-align: center;">🧴</div>
+        </div>
+        
+        <div class="portal hidden" id="portal" onclick="goToMod4()">🌌<br><span style="font-size:1.2rem; color:#ff69b4;">agora entra ali mb</span></div>
+    </div>
+
+    <div id="mod4" class="module hidden">
+        <div id="mc-chat" class="chat-box">
+            <p id="mc-question">A gente joga direto?</p>
+            <input type="text" id="mc-input" class="chat-input" placeholder="Sua resposta..." autocomplete="off">
+            <button class="btn-start" style="padding: 10px; margin-top:5px;" onclick="checkAnswer()">Enviar</button>
+        </div>
+        <div id="mc-game" class="hidden">
+            <p style="color:white; text-shadow: 1px 1px 0 #000; font-weight:bold;">sabe onde eu te prendi meu amor? quero ver vc achar hehe</p>
+            <div class="mc-world" id="mc-world"></div>
+        </div>
+    </div>
+    
+    <div id="jumpscare" class="hidden">🤡</div>
+
+    <div id="mod6-container" class="hidden">
+        <div class="hud">Cartas: <span id="carta-count">0</span>/20</div>
+        <div id="cupid-scene">
+            <div class="cupid" id="cupid">👼</div>
+            <p id="cupid-text" style="font-size:1.5rem; font-weight:bold;">oi vc e a ketlly?</p>
+        </div>
+        <div id="map-area" style="position: relative; width: 100%; height: 2000px;"></div>
+    </div>
+
+    <div id="carta-modal" class="modal hidden">
+        <h2 style="color:#ff69b4;">Carta Encontrada! 💌</h2>
+        <p id="carta-msg" style="font-size: 1.2rem;"></p>
+        <button onclick="closeModal()">Continuar</button>
+    </div>
+
+    <div id="final-modal" class="modal hidden">
+        <h1 style="color:#ff69b4;">💖 Parabéns Princesa! 💖</h1>
+        <p style="font-size: 1.2rem; line-height: 1.6;">meu amooor vc conseguiu fazer tudo, foi bem curto mais foi legal né? isso foi so pra te mostrar o tanto que eu te amo e continuo te amando cada vez mais cada dia te amo muitooo minha princesinha.</p>
+    </div>
+
+    <script>
+        const playAudio = (id) => { const a = document.getElementById(id); if(a) a.play().catch(()=>{}); }
+        const stopAudio = (id) => { const a = document.getElementById(id); if(a) { a.pause(); a.currentTime = 0; } }
+
+        function startGame() {
+            document.getElementById('start-screen').classList.add('hidden');
+            playAudio('audio-cute');
+            startMod1();
+        }
+
+        /* ====== MÓDULO 1 ====== */
+        function startMod1() {
+            const m1 = document.getElementById('mod1');
+            const txt = document.getElementById('m1-text');
+            m1.classList.remove('hidden');
+            setTimeout(() => txt.style.opacity = 1, 500);
+            
+            setTimeout(() => {
+                txt.style.opacity = 0;
+                setTimeout(() => {
+                    txt.innerText = "então, to fazendo meio curto mas acho que vai fica legal";
+                    txt.style.opacity = 1;
+                }, 1000);
+            }, 3000);
+
+            setTimeout(() => {
+                txt.classList.add('fall-physics');
+                stopAudio('audio-cute');
+                playAudio('audio-suspense');
+                document.body.classList.add('flash-bw');
+                
+                setTimeout(() => {
+                    document.body.classList.remove('flash-bw');
+                    document.body.classList.add('blackout');
+                    m1.classList.add('hidden');
+                    startMod2();
+                }, 3000);
+            }, 7500);
+        }
+
+        /* ====== MÓDULO 2 (MECÂNICA DE GIRAR CORRIGIDA) ====== */
+        let m2Attempts = 0;
+        let isRotationPhase = false;
+        
+        function startMod2() {
+            const m2 = document.getElementById('mod2');
+            m2.classList.remove('hidden');
+            
+            const handle = document.getElementById('handle');
+            const wrapper = document.getElementById('m2-wrapper');
+            let isDraggingSlider = false;
+            let startY = 0;
+
+            // Arrastar Slider
+            handle.addEventListener('pointerdown', (e) => {
+                if(isRotationPhase) return;
+                isDraggingSlider = true;
+                startY = e.clientY - handle.offsetTop;
+                handle.setPointerCapture(e.pointerId);
+            });
+
+            handle.addEventListener('pointermove', (e) => {
+                if (!isDraggingSlider) return;
+                let newTop = e.clientY - startY;
+                if (newTop < 0) newTop = 0;
+                if (newTop > 240) newTop = 240; 
+                handle.style.top = newTop + 'px';
+            });
+
+            handle.addEventListener('pointerup', (e) => {
+                if (!isDraggingSlider) return;
+                isDraggingSlider = false;
+                handle.releasePointerCapture(e.pointerId);
+                
+                if (handle.offsetTop < 50) { 
+                    m2Attempts++;
+                    handle.style.transition = 'top 0.5s ease-in';
+                    handle.style.top = '240px';
+                    setTimeout(() => handle.style.transition = 'none', 500);
+                    
+                    if (m2Attempts === 4) {
+                        isRotationPhase = true;
+                        document.getElementById('m2-text').classList.add('hidden');
+                        document.getElementById('rotate-hint').classList.remove('hidden');
+                        enableRotation(wrapper);
+                    }
+                } else {
+                    handle.style.transition = 'top 0.5s ease-in';
+                    handle.style.top = '240px';
+                    setTimeout(() => handle.style.transition = 'none', 500);
+                }
+            });
+        }
+
+        function enableRotation(element) {
+            let isRotating = false;
+            let startAngle = 0;
+            let currentRotation = 0;
+            let completed = false;
+
+            element.addEventListener('pointerdown', (e) => {
+                if(completed) return;
+                isRotating = true;
+                const rect = element.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                // Calcula o ângulo inicial do toque em relação ao centro
+                startAngle = Math.atan2(e.clientY - centerY, e.clientX - centerX) * (180 / Math.PI) - currentRotation;
+                element.setPointerCapture(e.pointerId);
+            });
+
+            element.addEventListener('pointermove', (e) => {
+                if (!isRotating || completed) return;
+                const rect = element.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                
+                const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX) * (180 / Math.PI);
+                currentRotation = angle - startAngle;
+                
+                element.style.transform = `rotate(${currentRotation}deg)`;
+
+                // Checa se virou ~180 graus (de ponta-cabeça)
+                const absRot = Math.abs(currentRotation % 360);
+                if (absRot > 160 && absRot < 200) {
+                    completed = true;
+                    isRotating = false;
+                    element.classList.add('falling-element');
+                    setTimeout(forceRotate, 1200); 
+                }
+            });
+
+            element.addEventListener('pointerup', (e) => {
+                isRotating = false;
+                element.releasePointerCapture(e.pointerId);
+            });
+        }
+
+        function forceRotate() {
+            document.body.style.background = 'white';
+            document.body.classList.remove('blackout');
+            document.getElementById('mod2').classList.add('hidden');
+            stopAudio('audio-suspense');
+            playAudio('audio-cute'); 
+            startMod3();
+        }
+
+        /* ====== MÓDULO 3 (FORMAS DETALHADAS SVG) ====== */
+        let isGlued = false;
+        let placedCount = 0;
+        
+        // Formas vetorizadas perfeitas
+        const shapesData = [
+            { id: 0, svg: `<svg viewBox="0 0 100 100"><defs><linearGradient id="grad-red" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ff9a9e"/><stop offset="100%" stop-color="#fecfef"/></linearGradient></defs><polygon points="50,10 90,90 10,90" fill="url(#grad-red)" stroke="#ff758c" stroke-width="4" stroke-linejoin="round"/></svg>` },
+            { id: 1, svg: `<svg viewBox="0 0 100 100"><defs><linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#a1c4fd"/><stop offset="100%" stop-color="#c2e9fb"/></linearGradient></defs><circle cx="50" cy="50" r="40" fill="url(#grad-blue)" stroke="#8fd3f4" stroke-width="4"/></svg>` },
+            { id: 2, svg: `<svg viewBox="0 0 100 100"><defs><linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#d4fc79"/><stop offset="100%" stop-color="#96e6a1"/></linearGradient></defs><rect x="15" y="15" width="70" height="70" rx="15" fill="url(#grad-green)" stroke="#74ebd5" stroke-width="4"/></svg>` },
+            { id: 3, svg: `<svg viewBox="0 0 100 100"><defs><linearGradient id="grad-gold" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f6d365"/><stop offset="100%" stop-color="#fda085"/></linearGradient></defs><polygon points="50,10 61,35 88,35 66,51 75,76 50,60 25,76 34,51 12,35 39,35" fill="url(#grad-gold)" stroke="#f6d365" stroke-width="4" stroke-linejoin="round"/></svg>` },
+            { id: 4, svg: `<svg viewBox="0 0 100 100"><defs><linearGradient id="grad-purple" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#e0c3fc"/><stop offset="100%" stop-color="#8ec5fc"/></linearGradient></defs><path d="M50,90 C50,90 10,60 10,30 A20,20 0 0,1 50,30 A20,20 0 0,1 90,30 C90,60 50,90 50,90 Z" fill="url(#grad-purple)" stroke="#b8c6db" stroke-width="4" stroke-linejoin="round"/></svg>` }
+        ];
+        
+        function startMod3() {
+            document.getElementById('mod3').classList.remove('hidden');
+            const wall = document.getElementById('wall');
+            const shapesContainer = document.getElementById('shapes');
+            
+            shapesData.forEach((data, i) => {
+                // Cria Buraco (Silhueta)
+                const hole = document.createElement('div');
+                hole.className = 'hole';
+                hole.id = 'hole-' + i;
+                hole.innerHTML = data.svg; 
+                wall.appendChild(hole);
+
+                // Cria Forma Colorida
+                const shape = document.createElement('div');
+                shape.className = 'shape';
+                shape.innerHTML = data.svg;
+                shape.dataset.index = i;
+                // Distribui os itens horizontalmente
+                shape.style.left = (i * 80) + 'px';
